@@ -12,3 +12,19 @@
 6. Получить список всех вакансий, в названии которых содержатся переданные в метод слова
 7. Файл **main** содержит класс **APIManager**, в котором
    реализованы методы для запроса информации о вакансиях и работодателях и получения информации о вакансии, работодателе, зарплате.
+## Работа с проектом
+Необходимо в pgAdmin создать БД и таблицы "emploeeys" и "vacancies" (с связью один ко многим от "emploeeys" к "vacancies").
+Создать виртуальное окружение и активировать его.
+Установить необходимые библиотеки.
+Для заполнения таблиц в БД необходимо ввести переменные в **main**, например,
+apimanager = APIManager(empls_list)
+apimanager.save_employers_info()
+apimanager.save_vacancy_info()
+
+Для получения списка вакансий, у которых з/п выше средней ввести переменные в **DBManager**, например,
+vacancies_list = DBManager()
+for i in vacancies_list.get_vacancies_with_higher_salary():
+    print(i)
+Предполагаемые результат:
+![image](https://github.com/semenova-ee/Semenova_coursework_5/assets/141341489/bc143b44-8c91-4400-a32c-639acb9cef54)
+
