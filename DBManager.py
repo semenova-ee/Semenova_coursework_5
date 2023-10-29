@@ -2,8 +2,7 @@ import psycopg2 as psycopg2
 from config import config
 
 
-class DBManager():
-
+class DBManager:
     @staticmethod
     def setup_connection():
         params = config()
@@ -16,17 +15,16 @@ class DBManager():
         except Exception as e:
             print(f"An error occurred: {e}")
 
-
     def get_companies_and_vacancies_count(self):
-        """ получает список всех компаний и количество вакансий у каждой компании."""
+        """Получает список всех компаний и количество вакансий у каждой компании."""
         conn = self.setup_connection()
         with conn.cursor() as cur:
             cur.execute('SELECT company_name, open_vacancies FROM employees;')
             return cur.fetchall()
 
     def get_all_vacancies(self):
-        """получает список всех вакансий с указанием названия компании,
-        названия вакансии и зарплаты и ссылки на вакансию."""
+        """Получает список всех вакансий с указанием названия компании,
+           названия вакансии и зарплаты и ссылки на вакансию."""
         conn = self.setup_connection()
         with conn.cursor() as cur:
             cur.execute('SELECT E.company_name, V.vacancies_name, V.salary, V.vacancy_link FROM vacancies V \
@@ -34,21 +32,21 @@ class DBManager():
             return cur.fetchall()
 
     def get_avg_salary(self):
-        """получает среднюю зарплату по вакансиям."""
+        """Получает среднюю зарплату по вакансиям."""
         conn = self.setup_connection()
         with conn.cursor() as cur:
             cur.execute('SELECT AVG(salary) FROM vacancies;')
             return cur.fetchall()
 
     def get_vacancies_with_higher_salary(self):
-        """получает список всех вакансий, у которых зарплата выше средней по всем вакансиям."""
+        """Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям."""
         conn = self.setup_connection()
         with conn.cursor() as cur:
             cur.execute('SELECT * FROM vacancies WHERE salary > (SELECT AVG(salary) FROM vacancies);')
             return cur.fetchall()
 
     def get_vacancies_with_keyword(self, keyword: str):
-        """получает список всех вакансий, в названии которых содержатся переданные в метод слова,
+        """Получает список всех вакансий, в названии которых содержатся переданные в метод слова,
         например python."""
         conn = self.setup_connection()
         with conn.cursor() as cur:

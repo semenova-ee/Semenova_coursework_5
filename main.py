@@ -2,6 +2,7 @@ import psycopg2
 import requests
 from config import config
 
+
 empls_list = [
     1122462,
     3529,
@@ -15,13 +16,17 @@ empls_list = [
     4046921
 ]
 
-class APIManager():
+
+class APIManager:
+    """Класс для работы с API"""
     url_employers = 'https://api.hh.ru/employers/'
     url_vacancy = 'https://api.hh.ru/vacancies/'
     url_list_of_vacancies = 'https://api.hh.ru/vacancies?employer_id='
     headers = {'User-Agent': 'api-test-agent'}
+
     def __init__(self, empls_list):
         self.empls_list = empls_list
+
     @staticmethod
     def setup_connection():
         params = config()
@@ -35,7 +40,7 @@ class APIManager():
             print(f"An error occurred: {e}")
 
     def send_request(self, id: int, for_vacancies: bool = False, for_current_vacancy: bool = False):
-        """Получает вакансии"""
+        """Посылает запрос для получения информации о вакансиях, работодателе"""
         if for_vacancies:
             r = requests.get(self.url_list_of_vacancies + str(id), headers=self.headers)
             return r.json()
@@ -46,6 +51,7 @@ class APIManager():
         return r.json()
 
     def save_employers_info(self):
+        """Получает информацию о работодателе"""
         conn = self.setup_connection()
         with conn.cursor() as cur:
             for i in self.empls_list:
@@ -57,24 +63,26 @@ class APIManager():
                 )
 
     def save_vacancy_info(self):
+        """Получает информацию о вакансии"""
         conn = self.setup_connection()
         with conn.cursor() as cur:
             for i in self.empls_list:
                 responce = self.send_request(i, True)
                 items = responce['items']
                 for item in items:
-                    res = self.send_request(item['id'], for_current_vacancy = True)
+                    res = self.send_request(item['id'], for_current_vacancy=True)
                     salary = self.inspect_salary(res)
                     if salary:
                         cur.execute(
-                        'INSERT INTO vacancies (vacancy_id, vacancies_name, salary, vacancy_link, key_skills, employee_id)'
-                        'VALUES (%s, %s, %s, %s, %s, %s)',
-                        [int(res["id"]), res["name"], salary, res["alternate_url"], [key_skill["name"] for key_skill in res["key_skills"]], res["employer"]["id"]]
+                            'INSERT INTO vacancies (vacancy_id, vacancies_name, salary, vacancy_link, key_skills, employee_id)'
+                            'VALUES (%s, %s, %s, %s, %s, %s)',
+                            [int(res["id"]), res["name"], salary, res["alternate_url"], [key_skill["name"] for key_skill in res["key_skills"]], res["employer"]["id"]]
                         )
                         print(f'вакансия {res["name"]} сохранена')
 
     @staticmethod
     def inspect_salary(vacancy: dict) -> int or None:
+        """Получает информацию о заработной плате"""
         try:
             if vacancy['salary']['currency'] != "RUR":
                 return None
