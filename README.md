@@ -17,13 +17,15 @@
 2.  Создать виртуальное окружение и активировать его.
 3. Установить необходимые библиотеки.
 4. Для заполнения таблиц в БД необходимо ввести переменные в **main**, например,
-apimanager = APIManager(empls_list)
+   
+`apimanager = APIManager(empls_list)`
 
-apimanager.save_employers_info()
+`apimanager.save_employers_info()`
 
-apimanager.save_vacancy_info()
+`apimanager.save_vacancy_info()`
 
 Предполагаемый результат:
+
 ![image](https://github.com/semenova-ee/Semenova_coursework_5/assets/141341489/7d28dbef-8cb7-4d05-ae49-d5dbafac6697)
 
 и
@@ -32,11 +34,11 @@ apimanager.save_vacancy_info()
 
 5. Для получения списка вакансий, у которых з/п выше средней, ввести в **DBManager** (достаточно раскомментировать), например,
 
-vacancies_list = DBManager()
+`vacancies_list = DBManager()`
 
-for i in vacancies_list.get_vacancies_with_higher_salary():
+`for i in vacancies_list.get_vacancies_with_higher_salary():`
 
-    print(i)
+`print(i)`
     
 Предполагаемый результат:
 
@@ -45,11 +47,11 @@ for i in vacancies_list.get_vacancies_with_higher_salary():
 
 6. Для получения списка вакансий, в названии которых содержится ключевое слово, ввести в **DBManager** (достаточно раскомментировать):
 
-vacancies_with_keyword_list = DBManager()
+`vacancies_with_keyword_list = DBManager()`
 
-for i in vacancies_with_keyword_list.get_vacancies_with_keyword('Developer'):
+`for i in vacancies_with_keyword_list.get_vacancies_with_keyword('Developer'):`
 
-    print(i)
+`print(i)`
     
 Предполагаемый результат:
 
@@ -58,11 +60,11 @@ for i in vacancies_with_keyword_list.get_vacancies_with_keyword('Developer'):
 
 7. Для получения списка вакансий, в необходимых навыках которых содержится ключевое слово, ввести в **DBManager** (достаточно раскомментировать):
    
-vacancies_with_skills_keyword_list = DBManager()
+`vacancies_with_skills_keyword_list = DBManager()`
 
-for i in vacancies_with_skills_keyword_list.get_vacancies_with_skills_keyword('Python'):
+`for i in vacancies_with_skills_keyword_list.get_vacancies_with_skills_keyword('Python'):`
 
-    print(i)
+`print(i)`
     
 Предполагаемый результат:
 
