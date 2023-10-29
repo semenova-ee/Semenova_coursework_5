@@ -18,25 +18,39 @@ class DBManager():
 
 
     def get_companies_and_vacancies_count(self):
+        """ получает список всех компаний и количество вакансий у каждой компании."""
         conn = self.setup_connection()
         with conn.cursor() as cur:
-            cur.execute('SELECT company_name, open_vacancies FROM employees')
+            cur.execute('SELECT company_name, open_vacancies FROM employees;')
             return cur.fetchall()
 
     def get_all_vacancies(self):
-        pass
-
-    def get_avg_salary(self):
+        """получает список всех вакансий с указанием названия компании,
+        названия вакансии и зарплаты и ссылки на вакансию."""
         conn = self.setup_connection()
         with conn.cursor() as cur:
-            cur.execute('SELECT AVG(salary) FROM vacancies')
+            cur.execute('SELECT E.company_name, V.vacancies_name, V.salary, V.vacancy_link FROM vacancies V \
+                    JOIN employees E on V.employee_id = E.employee_id;')
+            return cur.fetchall()
+
+    def get_avg_salary(self):
+        """получает среднюю зарплату по вакансиям."""
+        conn = self.setup_connection()
+        with conn.cursor() as cur:
+            cur.execute('SELECT AVG(salary) FROM vacancies;')
             return cur.fetchall()
 
     def get_vacancies_with_higher_salary(self):
-        pass
+        """получает список всех вакансий, у которых зарплата выше средней по всем вакансиям."""
+        conn = self.setup_connection()
+        with conn.cursor() as cur:
+            cur.execute('SELECT * FROM vacancies WHERE salary > (SELECT AVG(salary) FROM vacancies);')
+            return cur.fetchall()
 
-    def get_vacancies_with_keyword(self):
-        pass
-
-
-
+    def get_vacancies_with_keyword(self, keyword: str):
+        """получает список всех вакансий, в названии которых содержатся переданные в метод слова,
+        например python."""
+        conn = self.setup_connection()
+        with conn.cursor() as cur:
+            cur.execute(f"SELECT * FROM vacancies WHERE '{keyword}' = ANY(key_skills);")
+            return cur.fetchall()

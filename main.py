@@ -1,6 +1,5 @@
 import psycopg2
 import requests
-from DBManager import DBManager
 from config import config
 
 empls_list = [
@@ -12,16 +11,10 @@ empls_list = [
     5382804,
     4307094,
     11463,
-    1517303
+    1517303,
+    4046921
 ]
-# 'https://api.hh.ru/employers/{employer_id}'
-# url = 'https://api.hh.ru/employers/1122462'
-# headers = {'User-Agent': 'api-test-agent'}
-# r = requests.get(url=url, headers=headers)
-# responce = r.json()
-# print(responce['id'])
-# print(responce['name'])
-# print(responce['open_vacancies'])
+
 class APIManager():
     url_employers = 'https://api.hh.ru/employers/'
     url_vacancy = 'https://api.hh.ru/vacancies/'
@@ -74,10 +67,11 @@ class APIManager():
                     salary = self.inspect_salary(res)
                     if salary:
                         cur.execute(
-                        'INSERT INTO vacancies (employee_id, company_name, open_vacancies)'
-                        'VALUES (%s, %s, %s)',
-                        [int(responce["id"]), responce["name"], int(responce["open_vacancies"])]
+                        'INSERT INTO vacancies (vacancy_id, vacancies_name, salary, vacancy_link, key_skills, employee_id)'
+                        'VALUES (%s, %s, %s, %s, %s, %s)',
+                        [int(res["id"]), res["name"], salary, res["alternate_url"], [key_skill["name"] for key_skill in res["key_skills"]], res["employer"]["id"]]
                         )
+                        print(f'вакансия {res["name"]} сохранена')
 
     @staticmethod
     def inspect_salary(vacancy: dict) -> int or None:
@@ -96,7 +90,3 @@ class APIManager():
                 return None
         except Exception:
             return None
-
-
-apimanager = APIManager(empls_list)
-apimanager.save_employers_info()
