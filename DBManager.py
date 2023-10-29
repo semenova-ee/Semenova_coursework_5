@@ -45,10 +45,26 @@ class DBManager:
             cur.execute('SELECT * FROM vacancies WHERE salary > (SELECT AVG(salary) FROM vacancies);')
             return cur.fetchall()
 
-    def get_vacancies_with_keyword(self, keyword: str):
-        """Получает список всех вакансий, в названии которых содержатся переданные в метод слова,
-        например python."""
+    def get_vacancies_with_skills_keyword(self, keyword: str):
+        """Получает список всех вакансий по переданному ключевому слову в списке skills."""
         conn = self.setup_connection()
         with conn.cursor() as cur:
             cur.execute(f"SELECT * FROM vacancies WHERE '{keyword}' = ANY(key_skills);")
             return cur.fetchall()
+
+    def get_vacancies_with_keyword(self, keyword: str):
+        """Получает список всех вакансий по переданному ключевому слову в названии вакансии."""
+        conn = self.setup_connection()
+        with conn.cursor() as cur:
+            cur.execute(f"SELECT * FROM vacancies WHERE vacancies_name LIKE '%{keyword}%';")
+            return cur.fetchall()
+
+# vacancies_list = DBManager()
+# for i in vacancies_list.get_vacancies_with_higher_salary():
+#     print(i)
+# vacancies_with_keyword_list = DBManager()
+# for i in vacancies_with_keyword_list.get_vacancies_with_keyword('Developer'):
+#     print(i)
+# vacancies_with_skills_keyword_list = DBManager()
+# for i in vacancies_with_skills_keyword_list.get_vacancies_with_skills_keyword('Python'):
+#     print(i)
