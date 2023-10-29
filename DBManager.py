@@ -58,3 +58,13 @@ class DBManager:
         with conn.cursor() as cur:
             cur.execute(f"SELECT * FROM vacancies WHERE vacancies_name LIKE '%{keyword}%';")
             return cur.fetchall()
+
+# vacancies_list = DBManager()
+# for i in vacancies_list.get_vacancies_with_higher_salary():
+#     print(i)
+# vacancies_with_keyword_list = DBManager()
+# for i in vacancies_with_keyword_list.get_vacancies_with_keyword('Developer'):
+#     print(i)
+# vacancies_with_skills_keyword_list = DBManager()
+# for i in vacancies_with_skills_keyword_list.get_vacancies_with_skills_keyword('Python'):
+#     print(i)
