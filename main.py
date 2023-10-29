@@ -98,7 +98,3 @@ class APIManager:
                 return None
         except Exception:
             return None
-
-# apimanager = APIManager(empls_list)
-# apimanager.save_employers_info()
-# apimanager.save_vacancy_info()
